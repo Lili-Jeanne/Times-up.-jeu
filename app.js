@@ -327,8 +327,6 @@ const Game = {
   secondsLeft: 0,
   isTurnActive: false,
   isCardAnimating: false,
-  isPaused: false,
-  lastToggleTime: 0,
   turnHistory: [],   // List of { card, guessed: boolean } played in this turn
 
   // Setup DOM connections and default values
@@ -445,15 +443,6 @@ const Game = {
 
     document.getElementById('btn-pass').addEventListener('click', () => {
       this.handlePassCard();
-    });
-
-    // Pause/Resume actions
-    document.getElementById('btn-pause-play').addEventListener('click', () => {
-      this.togglePause();
-    });
-    
-    document.getElementById('btn-resume').addEventListener('click', () => {
-      this.togglePause();
     });
 
     // Turn verification confirmation
@@ -583,16 +572,8 @@ const Game = {
     this.turnCardsGuessed = 0;
     this.secondsLeft = this.timerSetting;
     this.isTurnActive = true;
-    this.isPaused = false;
     this.turnHistory = [];
 
-    // Setup pause view state
-    document.getElementById('gameplay-pause-overlay').classList.add('hidden');
-    document.getElementById('game-card').classList.remove('hidden');
-    const pausePlayBtn = document.getElementById('btn-pause-play');
-    pausePlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-    pausePlayBtn.title = "Mettre en pause";
-    
     // Update gameplay HUD
     document.getElementById('gameplay-team-name').innerText = this.teams[this.currentTeamIndex].name;
     document.getElementById('gameplay-score-count').innerText = "0";
@@ -632,40 +613,6 @@ const Game = {
     }, 1000);
   },
 
-  togglePause() {
-    if (!this.isTurnActive) return;
-
-    // Prevent rapid click bouncing on touch screens (cooldown of 400ms)
-    const now = Date.now();
-    if (now - this.lastToggleTime < 400) {
-      return;
-    }
-    this.lastToggleTime = now;
-
-    SoundEffects.playClick();
-    const pauseOverlay = document.getElementById('gameplay-pause-overlay');
-    const gameCard = document.getElementById('game-card');
-    const pausePlayBtn = document.getElementById('btn-pause-play');
-
-    if (this.isPaused) {
-      // Resume
-      this.isPaused = false;
-      pauseOverlay.classList.add('hidden');
-      gameCard.classList.remove('hidden');
-      pausePlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-      pausePlayBtn.title = "Mettre en pause";
-      
-      this.startTimerInterval();
-    } else {
-      // Pause
-      this.isPaused = true;
-      pauseOverlay.classList.remove('hidden');
-      gameCard.classList.add('hidden');
-      pausePlayBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-      pausePlayBtn.title = "Reprendre le jeu";
-      
-      clearInterval(this.timerInterval);
-    }
   },
 
   updateTimerCircle() {
@@ -700,7 +647,7 @@ const Game = {
   },
 
   handleGuessCorrect() {
-    if (!this.isTurnActive || this.isCardAnimating || this.isPaused) return;
+    if (!this.isTurnActive || this.isCardAnimating) return;
     
     SoundEffects.playCorrect();
     this.isCardAnimating = true;
@@ -744,7 +691,7 @@ const Game = {
   },
 
   handlePassCard() {
-    if (!this.isTurnActive || this.isCardAnimating || this.isPaused) return;
+    if (!this.isTurnActive || this.isCardAnimating) return;
 
     SoundEffects.playPass();
     this.isCardAnimating = true;
