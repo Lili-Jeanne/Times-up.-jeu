@@ -613,8 +613,6 @@ const Game = {
     }, 1000);
   },
 
-  },
-
   updateTimerCircle() {
     const textEl = document.getElementById('timer-text');
     const circle = document.getElementById('timer-progress');
