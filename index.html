@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Time's Up! - Le Jeu Officiel de vos Soirées</title>
-  <meta name="description" content="Jouez au Time's Up gratuitement et en ligne. Découvrez nos versions Classique, Famille, Entre Amis et Culture Générale avec 180 cartes prêtes à l'emploi.">
-  
+  <meta name="description"
+    content="Jouez au Time's Up gratuitement et en ligne. Découvrez nos versions Classique, Famille, Entre Amis et Culture Générale avec 180 cartes prêtes à l'emploi.">
+
   <!-- Google Fonts: Outfit for titles, Plus Jakarta Sans for body -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap"
+    rel="stylesheet">
+
   <!-- FontAwesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="app-container">
-    
+
     <!-- Header with Rules Button -->
     <header class="game-header">
       <div class="logo">
@@ -30,7 +35,7 @@
     </header>
 
     <main class="game-main">
-      
+
       <!-- SCREEN 1: Setup -->
       <section id="screen-setup" class="game-screen active">
         <div class="hero-section">
@@ -40,15 +45,21 @@
 
         <!-- Resume game banner -->
         <div id="resume-game-banner" class="resume-banner hidden">
-          <span><i class="fa-solid fa-clock-rotate-left"></i> Partie interrompue (<span id="resume-info">Manche 1</span>)</span>
-          <button id="btn-resume-saved" class="secondary-btn sm-btn">Reprendre</button>
+          <span><i class="fa-solid fa-clock-rotate-left"></i> Partie interrompue (<span id="resume-info">Manche
+              1</span>)</span>
+          <div class="resume-actions">
+            <button id="btn-resume-saved" class="secondary-btn sm-btn">Reprendre</button>
+            <button id="btn-delete-saved" class="secondary-btn sm-btn danger-btn" title="Supprimer la sauvegarde">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
         </div>
 
         <div class="setup-grid">
           <!-- Left Column: Config -->
           <div class="setup-card">
             <h2><i class="fa-solid fa-sliders text-accent"></i> Options de la partie</h2>
-            
+
             <div class="form-group">
               <label for="input-timer">Temps par tour (secondes)</label>
               <div class="timer-presets">
@@ -69,7 +80,7 @@
                     <span class="deck-desc">60 cartes équilibrées (Célébrités, objets, films...)</span>
                   </span>
                 </label>
-                
+
                 <label class="deck-checkbox">
                   <input type="checkbox" id="deck-family">
                   <span class="deck-info">
@@ -94,7 +105,8 @@
                   </span>
                 </label>
               </div>
-              <div id="deck-validation-error" class="error-text hidden">Veuillez sélectionner au moins un deck de cartes.</div>
+              <div id="deck-validation-error" class="error-text hidden">Veuillez sélectionner au moins un deck de
+                cartes.</div>
             </div>
           </div>
 
@@ -126,17 +138,21 @@
       <section id="screen-round-intro" class="game-screen">
         <div class="round-badge">Manche <span id="intro-round-number">1</span></div>
         <h2 id="intro-round-title" class="round-title">Description Libre</h2>
-        
+
         <div class="round-rules-card">
           <h3>Consignes pour cette manche :</h3>
-          <p id="intro-round-rules" class="round-rules-text">Vous pouvez parler librement, décrire le mot sous toutes ses formes sans prononcer le mot en lui-même ni le traduire. Vous pouvez passer autant de cartes que vous le souhaitez.</p>
+          <p id="intro-round-rules" class="round-rules-text">Vous pouvez parler librement, décrire le mot sous toutes
+            ses formes sans prononcer le mot en lui-même ni le traduire. Vous pouvez passer autant de cartes que vous le
+            souhaitez.</p>
         </div>
 
         <div class="next-team-card">
           <p class="label">C'est au tour de :</p>
           <div id="intro-team-name" class="team-highlight">Équipe 1</div>
-          <div class="cards-left-badge"><i class="fa-solid fa-layer-group"></i> <span id="intro-cards-left">--</span> cartes restantes</div>
-          <div class="next-player-hint"><i class="fa-solid fa-mobile-screen-button"></i> Passez l'appareil au joueur qui va faire deviner !</div>
+          <div class="cards-left-badge"><i class="fa-solid fa-layer-group"></i> <span id="intro-cards-left">--</span>
+            cartes restantes</div>
+          <div class="next-player-hint"><i class="fa-solid fa-mobile-screen-button"></i> Passez l'appareil au joueur qui
+            va faire deviner !</div>
         </div>
 
         <div class="action-bar">
@@ -204,7 +220,7 @@
       <section id="screen-turn-summary" class="game-screen">
         <h2>Bilan de votre tour</h2>
         <p class="summary-subtitle">Modifiez si besoin les cartes effectivement trouvées :</p>
-        
+
         <div class="summary-card scrollable-summary-card">
           <div id="turn-history-list" class="turn-history-list">
             <!-- Dynamically populated list of played cards with toggle checkmarks -->
@@ -259,7 +275,7 @@
             <span id="podium-2-name" class="podium-team-name">Équipe B</span>
             <span id="podium-2-score" class="podium-team-score">-- pts</span>
           </div>
-          
+
           <div id="podium-1" class="podium-step step-1">
             <span class="podium-trophy">👑</span>
             <span class="podium-rank">1</span>
@@ -304,26 +320,36 @@
           <button id="btn-close-rules" class="close-btn">&times;</button>
         </div>
         <div class="modal-body">
-          <p>Le <strong>Time's Up!</strong> se joue en équipe et en 3 manches avec le même paquet de cartes de départ.</p>
-          
+          <p>Le <strong>Time's Up!</strong> se joue en équipe et en 3 manches avec le même paquet de cartes de départ.
+          </p>
+
           <div class="modal-round-section">
             <h3><span class="badge">Manche 1</span> Description libre</h3>
-            <p>Le joueur décrit la carte à ses coéquipiers sans prononcer le mot inscrit (ni traduction, ni épellation). Les coéquipiers peuvent proposer autant de réponses qu'ils le veulent. Le joueur peut <strong>passer</strong> autant de cartes qu'il le souhaite. Chaque carte trouvée rapporte 1 point.</p>
+            <p>Le joueur décrit la carte à ses coéquipiers sans prononcer le mot inscrit (ni traduction, ni épellation).
+              Les coéquipiers peuvent proposer autant de réponses qu'ils le veulent. Le joueur peut
+              <strong>passer</strong> autant de cartes qu'il le souhaite. Chaque carte trouvée rapporte 1 point.</p>
           </div>
 
           <div class="modal-round-section">
             <h3><span class="badge">Manche 2</span> Un seul mot</h3>
-            <p>Le même paquet de cartes est mélangé. Le joueur ne peut prononcer <strong>qu'un seul et unique mot</strong> pour faire deviner la carte. Les coéquipiers n'ont droit qu'à <strong>une seule proposition</strong> de réponse ! S'ils se trompent, la carte ne peut plus être devinée ce tour-ci et le joueur passe à la suivante. Passer est interdit par les règles officielles (ici, vous pouvez passer, mais la carte retournera simplement dans la pioche sans point).</p>
+            <p>Le même paquet de cartes est mélangé. Le joueur ne peut prononcer <strong>qu'un seul et unique
+                mot</strong> pour faire deviner la carte. Les coéquipiers n'ont droit qu'à <strong>une seule
+                proposition</strong> de réponse ! S'ils se trompent, la carte ne peut plus être devinée ce tour-ci et le
+              joueur passe à la suivante. Passer est interdit par les règles officielles (ici, vous pouvez passer, mais
+              la carte retournera simplement dans la pioche sans point).</p>
           </div>
 
           <div class="modal-round-section">
             <h3><span class="badge">Manche 3</span> Le mime</h3>
-            <p>Les cartes sont à nouveau mélangées. Le joueur n'a plus le droit de parler du tout. Il doit <strong>mimer et faire des bruitages</strong>. Ses coéquipiers n'ont à nouveau droit qu'à <strong>une seule proposition</strong>.</p>
+            <p>Les cartes sont à nouveau mélangées. Le joueur n'a plus le droit de parler du tout. Il doit <strong>mimer
+                et faire des bruitages</strong>. Ses coéquipiers n'ont à nouveau droit qu'à <strong>une seule
+                proposition</strong>.</p>
           </div>
 
           <div class="modal-tip">
             <i class="fa-solid fa-lightbulb"></i>
-            <p><strong>Astuce :</strong> Mémorisez bien les cartes qui sortent à la Manche 1 ! Ce sont exactement les mêmes cartes qui reviendront aux manches 2 et 3.</p>
+            <p><strong>Astuce :</strong> Mémorisez bien les cartes qui sortent à la Manche 1 ! Ce sont exactement les
+              mêmes cartes qui reviendront aux manches 2 et 3.</p>
           </div>
         </div>
       </div>
@@ -333,4 +359,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

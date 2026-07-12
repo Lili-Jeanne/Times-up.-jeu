@@ -431,6 +431,10 @@ const Game = {
       this.resumeSavedGame();
     });
 
+    document.getElementById('btn-delete-saved').addEventListener('click', () => {
+      this.deleteSavedGame();
+    });
+
     // Playback Ready -> Start timer
     document.getElementById('btn-ready').addEventListener('click', () => {
       this.startTurn();
@@ -994,6 +998,16 @@ const Game = {
       }
     } catch (e) {
       console.error("Could not resume saved game", e);
+    }
+  },
+
+  deleteSavedGame() {
+    try {
+      SoundEffects.playPass();
+      this.clearGameState();
+      document.getElementById('resume-game-banner').classList.add('hidden');
+    } catch (e) {
+      console.error("Could not delete saved game", e);
     }
   }
 };

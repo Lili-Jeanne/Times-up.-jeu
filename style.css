@@ -1151,3 +1151,17 @@ body {
   align-items: center;
   gap: 0.4rem;
 }
+
+.resume-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.danger-btn {
+  background: var(--color-red) !important;
+  color: #FFFFFF !important;
+}
+
+.danger-btn:hover {
+  background: #a8231e !important;
+}
