@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time's Up! - Le Jeu Officiel de vos Soirées</title>
+  <meta name="description" content="Jouez au Time's Up gratuitement et en ligne. Découvrez nos versions Classique, Famille, Entre Amis et Culture Générale avec 180 cartes prêtes à l'emploi.">
+  
+  <!-- Google Fonts: Outfit for titles, Plus Jakarta Sans for body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header with Rules Button -->
+    <header class="game-header">
+      <div class="logo">
+        <span class="logo-accent">Time's</span> Up!
+      </div>
+      <button id="btn-show-rules" class="icon-btn" title="Règles du jeu">
+        <i class="fa-solid fa-circle-question"></i>
+      </button>
+    </header>
+
+    <main class="game-main">
+      
+      <!-- SCREEN 1: Setup -->
+      <section id="screen-setup" class="game-screen active">
+        <div class="hero-section">
+          <h1>Prêts à faire deviner ?</h1>
+          <p class="hero-subtitle">Configurez votre partie en quelques clics et lancez le jeu.</p>
+        </div>
+
+        <div class="setup-grid">
+          <!-- Left Column: Config -->
+          <div class="setup-card">
+            <h2><i class="fa-solid fa-sliders text-accent"></i> Options de la partie</h2>
+            
+            <div class="form-group">
+              <label for="input-timer">Temps par tour (secondes)</label>
+              <div class="timer-presets">
+                <button type="button" class="preset-btn" data-time="30">30s</button>
+                <button type="button" class="preset-btn active" data-time="40">40s</button>
+                <button type="button" class="preset-btn" data-time="60">60s</button>
+              </div>
+              <input type="hidden" id="input-timer" value="40">
+            </div>
+
+            <div class="form-group">
+              <label>Decks de cartes à inclure</label>
+              <div class="deck-selector">
+                <label class="deck-checkbox active">
+                  <input type="checkbox" id="deck-standard" checked>
+                  <span class="deck-info">
+                    <span class="deck-name"><i class="fa-solid fa-star"></i> Standard</span>
+                    <span class="deck-desc">60 cartes équilibrées (Célébrités, objets, films...)</span>
+                  </span>
+                </label>
+                
+                <label class="deck-checkbox">
+                  <input type="checkbox" id="deck-family">
+                  <span class="deck-info">
+                    <span class="deck-name"><i class="fa-solid fa-child"></i> Famille</span>
+                    <span class="deck-desc">40 cartes simples adaptées aux plus jeunes</span>
+                  </span>
+                </label>
+
+                <label class="deck-checkbox">
+                  <input type="checkbox" id="deck-friends">
+                  <span class="deck-info">
+                    <span class="deck-name"><i class="fa-solid fa-glass-cheers"></i> Entre Amis</span>
+                    <span class="deck-desc">40 cartes avec humour et pop culture moderne</span>
+                  </span>
+                </label>
+
+                <label class="deck-checkbox">
+                  <input type="checkbox" id="deck-culture">
+                  <span class="deck-info">
+                    <span class="deck-name"><i class="fa-solid fa-brain"></i> Culture Générale</span>
+                    <span class="deck-desc">40 cartes plus difficiles (Histoire, Art, Sciences)</span>
+                  </span>
+                </label>
+              </div>
+              <div id="deck-validation-error" class="error-text hidden">Veuillez sélectionner au moins un deck de cartes.</div>
+            </div>
+          </div>
+
+          <!-- Right Column: Teams -->
+          <div class="setup-card">
+            <h2><i class="fa-solid fa-users text-accent"></i> Équipes</h2>
+            <div id="teams-container" class="teams-list">
+              <!-- Team Inputs will be generated here -->
+            </div>
+            <div class="team-actions">
+              <button type="button" id="btn-add-team" class="secondary-btn">
+                <i class="fa-solid fa-plus"></i> Ajouter une équipe
+              </button>
+              <button type="button" id="btn-remove-team" class="secondary-btn">
+                <i class="fa-solid fa-minus"></i> Enlever
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-bar text-center">
+          <button id="btn-start-game" class="primary-btn lg-btn">
+            Créer la partie <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: Round Intro -->
+      <section id="screen-round-intro" class="game-screen">
+        <div class="round-badge">Manche <span id="intro-round-number">1</span></div>
+        <h2 id="intro-round-title" class="round-title">Description Libre</h2>
+        
+        <div class="round-rules-card">
+          <h3>Consignes pour cette manche :</h3>
+          <p id="intro-round-rules" class="round-rules-text">Vous pouvez parler librement, décrire le mot sous toutes ses formes sans prononcer le mot en lui-même ni le traduire. Vous pouvez passer autant de cartes que vous le souhaitez.</p>
+        </div>
+
+        <div class="next-team-card">
+          <p class="label">C'est au tour de :</p>
+          <div id="intro-team-name" class="team-highlight">Équipe 1</div>
+          <div class="cards-left-badge"><i class="fa-solid fa-layer-group"></i> <span id="intro-cards-left">--</span> cartes restantes</div>
+          <div class="next-player-hint"><i class="fa-solid fa-mobile-screen-button"></i> Passez l'appareil au joueur qui va faire deviner !</div>
+        </div>
+
+        <div class="action-bar">
+          <button id="btn-ready" class="primary-btn lg-btn">
+            Lancer le chrono <i class="fa-solid fa-stopwatch"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: Gameplay -->
+      <section id="screen-gameplay" class="game-screen">
+        <!-- Top Info HUD -->
+        <div class="hud-bar">
+          <div class="hud-item">
+            <span class="hud-label">Tour de</span>
+            <span id="gameplay-team-name" class="hud-value text-accent">Équipe 1</span>
+          </div>
+          <div class="hud-item text-center">
+            <span class="hud-label">Trouvées</span>
+            <span id="gameplay-score-count" class="hud-value score-glow">0</span>
+          </div>
+          <div class="hud-item text-right">
+            <span class="hud-label">Restantes</span>
+            <span id="gameplay-cards-left" class="hud-value">--</span>
+          </div>
+        </div>
+
+        <!-- Timer Circle Progress -->
+        <div class="timer-container">
+          <div class="timer-circle-svg">
+            <svg>
+              <circle class="bg" cx="50" cy="50" r="45"></circle>
+              <circle id="timer-progress" class="progress" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div id="timer-text" class="timer-number">40</div>
+          </div>
+          <button id="btn-pause-play" class="icon-btn pause-play-btn" title="Mettre en pause">
+            <i class="fa-solid fa-pause"></i>
+          </button>
+        </div>
+
+        <!-- Game Card (3D Flipper) -->
+        <div class="card-area">
+          <!-- Pause Overlay -->
+          <div id="gameplay-pause-overlay" class="pause-overlay hidden">
+            <i class="fa-solid fa-circle-pause pause-big-icon"></i>
+            <h3>Jeu en Pause</h3>
+            <p>Le mot est masqué</p>
+            <button id="btn-resume" class="primary-btn sm-btn">Reprendre</button>
+          </div>
+
+          <div id="game-card" class="times-up-card">
+            <div class="card-glow"></div>
+            <div class="card-content">
+              <span id="card-category" class="card-category">MARQUE</span>
+              <h3 id="card-word" class="card-word">McDonald's</h3>
+              <p id="card-desc" class="card-desc">Description ou indice sur le mot...</p>
+              <p class="card-logo-watermark">Time's Up!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="gameplay-actions">
+          <button id="btn-pass" class="action-btn pass-btn">
+            <i class="fa-solid fa-forward"></i> Passer
+          </button>
+          <button id="btn-correct" class="action-btn correct-btn">
+            <i class="fa-solid fa-check"></i> Trouvé !
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3.5: Turn Summary / Edit list -->
+      <section id="screen-turn-summary" class="game-screen">
+        <h2>Bilan de votre tour</h2>
+        <p class="summary-subtitle">Modifiez si besoin les cartes effectivement trouvées :</p>
+        
+        <div class="summary-card scrollable-summary-card">
+          <div id="turn-history-list" class="turn-history-list">
+            <!-- Dynamically populated list of played cards with toggle checkmarks -->
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button id="btn-confirm-turn" class="primary-btn lg-btn">
+            Valider et continuer <i class="fa-solid fa-check"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 4: Round Summary -->
+      <section id="screen-round-summary" class="game-screen">
+        <h2>Bilan du tour</h2>
+        <p class="summary-subtitle">Manche <span id="summary-round-number">1</span> terminée ! Voici les scores :</p>
+
+        <div class="summary-card">
+          <h3>Scores de la manche</h3>
+          <div id="round-scores-list" class="scores-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <h3>Classement général</h3>
+          <div id="total-scores-list" class="scores-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button id="btn-next-round" class="primary-btn lg-btn">
+            Manche suivante <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 5: Game Over -->
+      <section id="screen-game-over" class="game-screen">
+        <div class="victory-header">
+          <div class="trophy-icon">🏆</div>
+          <h1>Victoire !</h1>
+          <p class="celebration-text">La partie est terminée. Félicitations à tous les joueurs !</p>
+        </div>
+
+        <!-- Podium Layout -->
+        <div class="podium-container">
+          <div id="podium-2" class="podium-step step-2">
+            <span class="podium-rank">2</span>
+            <span id="podium-2-name" class="podium-team-name">Équipe B</span>
+            <span id="podium-2-score" class="podium-team-score">-- pts</span>
+          </div>
+          
+          <div id="podium-1" class="podium-step step-1">
+            <span class="podium-trophy">👑</span>
+            <span class="podium-rank">1</span>
+            <span id="podium-1-name" class="podium-team-name">Équipe A</span>
+            <span id="podium-1-score" class="podium-team-score">-- pts</span>
+          </div>
+
+          <div id="podium-3" class="podium-step step-3">
+            <span class="podium-rank">3</span>
+            <span id="podium-3-name" class="podium-team-name">Équipe C</span>
+            <span id="podium-3-score" class="podium-team-score">-- pts</span>
+          </div>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="final-leaderboard-card">
+          <h3>Classement Final</h3>
+          <div id="final-leaderboard-list" class="scores-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button id="btn-restart" class="primary-btn lg-btn">
+            Nouvelle Partie <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+      <p>Time's Up! Web App &bull; Créé pour s'amuser entre amis et en famille</p>
+    </footer>
+
+    <!-- RULES MODAL -->
+    <div id="rules-modal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2>Règles Officielles du Time's Up!</h2>
+          <button id="btn-close-rules" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Le <strong>Time's Up!</strong> se joue en équipe et en 3 manches avec le même paquet de cartes de départ.</p>
+          
+          <div class="modal-round-section">
+            <h3><span class="badge">Manche 1</span> Description libre</h3>
+            <p>Le joueur décrit la carte à ses coéquipiers sans prononcer le mot inscrit (ni traduction, ni épellation). Les coéquipiers peuvent proposer autant de réponses qu'ils le veulent. Le joueur peut <strong>passer</strong> autant de cartes qu'il le souhaite. Chaque carte trouvée rapporte 1 point.</p>
+          </div>
+
+          <div class="modal-round-section">
+            <h3><span class="badge">Manche 2</span> Un seul mot</h3>
+            <p>Le même paquet de cartes est mélangé. Le joueur ne peut prononcer <strong>qu'un seul et unique mot</strong> pour faire deviner la carte. Les coéquipiers n'ont droit qu'à <strong>une seule proposition</strong> de réponse ! S'ils se trompent, la carte ne peut plus être devinée ce tour-ci et le joueur passe à la suivante. Passer est interdit par les règles officielles (ici, vous pouvez passer, mais la carte retournera simplement dans la pioche sans point).</p>
+          </div>
+
+          <div class="modal-round-section">
+            <h3><span class="badge">Manche 3</span> Le mime</h3>
+            <p>Les cartes sont à nouveau mélangées. Le joueur n'a plus le droit de parler du tout. Il doit <strong>mimer et faire des bruitages</strong>. Ses coéquipiers n'ont à nouveau droit qu'à <strong>une seule proposition</strong>.</p>
+          </div>
+
+          <div class="modal-tip">
+            <i class="fa-solid fa-lightbulb"></i>
+            <p><strong>Astuce :</strong> Mémorisez bien les cartes qui sortent à la Manche 1 ! Ce sont exactement les mêmes cartes qui reviendront aux manches 2 et 3.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
