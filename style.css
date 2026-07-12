@@ -37,6 +37,7 @@ body {
   overflow-x: hidden;
   line-height: 1.4;
   padding: 1rem;
+  overscroll-behavior: contain;
 }
 
 /* App Container */
@@ -1122,4 +1123,31 @@ body {
 .btn-toggle-status:active {
   transform: translate(0, 0);
   box-shadow: none;
+}
+
+/* Resume Game Banner */
+.resume-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-yellow);
+  border: 2px solid var(--text-dark);
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--text-dark);
+  box-shadow: 3px 3px 0px 0px var(--text-dark);
+}
+
+.resume-banner.hidden {
+  display: none !important;
+}
+
+.resume-banner span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }

@@ -328,6 +328,7 @@ const Game = {
   isTurnActive: false,
   isCardAnimating: false,
   isPaused: false,
+  lastToggleTime: 0,
   turnHistory: [],   // List of { card, guessed: boolean } played in this turn
 
   // Setup DOM connections and default values
@@ -335,6 +336,7 @@ const Game = {
     this.bindEvents();
     this.renderTeamsSetup();
     this.setupPresets();
+    this.checkSavedGame();
   },
 
   setupPresets() {
@@ -425,6 +427,10 @@ const Game = {
 
     document.getElementById('btn-start-game').addEventListener('click', () => {
       this.startGame();
+    });
+
+    document.getElementById('btn-resume-saved').addEventListener('click', () => {
+      this.resumeSavedGame();
     });
 
     // Playback Ready -> Start timer
@@ -526,6 +532,7 @@ const Game = {
 
     // Launch round 1 intro
     this.prepareRound();
+    this.saveGameState();
   },
 
   shuffle(array) {
@@ -627,6 +634,13 @@ const Game = {
 
   togglePause() {
     if (!this.isTurnActive) return;
+
+    // Prevent rapid click bouncing on touch screens (cooldown of 400ms)
+    const now = Date.now();
+    if (now - this.lastToggleTime < 400) {
+      return;
+    }
+    this.lastToggleTime = now;
 
     SoundEffects.playClick();
     const pauseOverlay = document.getElementById('gameplay-pause-overlay');
@@ -854,6 +868,7 @@ const Game = {
       this.currentTeamIndex = (this.currentTeamIndex + 1) % this.teams.length;
       this.showRoundIntro();
     }
+    this.saveGameState();
   },
 
   endRound() {
@@ -898,12 +913,14 @@ const Game = {
       this.currentRound++;
       this.currentTeamIndex = (this.currentRound - 1) % this.teams.length;
       this.prepareRound();
+      this.saveGameState();
     } else {
       this.endGame();
     }
   },
 
   endGame() {
+    this.clearGameState();
     SoundEffects.playVictory();
     
     const sorted = [...this.teams].sort((a, b) => b.score - a.score);
@@ -947,6 +964,10 @@ const Game = {
   },
 
   resetToSetup() {
+    this.clearGameState();
+    // Hide resume banner since game was wiped
+    document.getElementById('resume-game-banner').classList.add('hidden');
+
     // Reset structural state
     this.teams.forEach(t => {
       t.score = 0;
@@ -956,6 +977,79 @@ const Game = {
     this.currentTeamIndex = 0;
     
     this.switchScreen('screen-setup');
+  },
+
+  // --- PERSISTENCE LOGIC ---
+  saveGameState() {
+    try {
+      const state = {
+        teams: this.teams,
+        selectedDecks: this.selectedDecks,
+        timerSetting: this.timerSetting,
+        gameDeck: this.gameDeck,
+        roundDeck: this.roundDeck,
+        discardDeck: this.discardDeck,
+        currentRound: this.currentRound,
+        currentTeamIndex: this.currentTeamIndex
+      };
+      localStorage.setItem("timesup_game_state", JSON.stringify(state));
+    } catch (e) {
+      console.error("Could not save game state to localStorage", e);
+    }
+  },
+
+  clearGameState() {
+    try {
+      localStorage.removeItem("timesup_game_state");
+    } catch (e) {
+      console.error("Could not clear game state from localStorage", e);
+    }
+  },
+
+  checkSavedGame() {
+    try {
+      const data = localStorage.getItem("timesup_game_state");
+      if (data) {
+        const saved = JSON.parse(data);
+        if (saved && saved.teams && saved.roundDeck && saved.roundDeck.length > 0) {
+          // Show banner
+          const banner = document.getElementById('resume-game-banner');
+          const infoText = document.getElementById('resume-info');
+          
+          const teamNames = saved.teams.map(t => t.name).join(" vs ");
+          infoText.innerText = `Manche ${saved.currentRound} - ${teamNames}`;
+          banner.classList.remove('hidden');
+        }
+      }
+    } catch (e) {
+      console.warn("Could not check saved game in localStorage", e);
+    }
+  },
+
+  resumeSavedGame() {
+    try {
+      SoundEffects.playClick();
+      const data = localStorage.getItem("timesup_game_state");
+      if (data) {
+        const saved = JSON.parse(data);
+        this.teams = saved.teams;
+        this.selectedDecks = saved.selectedDecks;
+        this.timerSetting = saved.timerSetting;
+        this.gameDeck = saved.gameDeck;
+        this.roundDeck = saved.roundDeck;
+        this.discardDeck = saved.discardDeck;
+        this.currentRound = saved.currentRound;
+        this.currentTeamIndex = saved.currentTeamIndex;
+
+        // Hide banner
+        document.getElementById('resume-game-banner').classList.add('hidden');
+        
+        // Resume directly to round intro
+        this.showRoundIntro();
+      }
+    } catch (e) {
+      console.error("Could not resume saved game", e);
+    }
   }
 };
 
